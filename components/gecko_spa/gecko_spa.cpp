@@ -870,8 +870,8 @@ void GeckoSpaClimate::setup() {
 
 climate::ClimateTraits GeckoSpaClimate::traits() {
   auto traits = climate::ClimateTraits();
-    traits.set_has_current_temperature(true);
-    traits.set_has_action(true);
+  traits.add_feature_flags(esphome::climate::ClimateFeatures::CURRENT_TEMPERATURE);
+traits.add_feature_flags(esphome::climate::ClimateFeatures::ACTION);
   traits.set_supported_modes({climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_COOL});
   traits.set_visual_min_temperature(26.0);
   traits.set_visual_max_temperature(40.0);
