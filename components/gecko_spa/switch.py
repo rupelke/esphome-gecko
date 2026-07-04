@@ -50,3 +50,5 @@ async def to_code(config):
         cg.add(parent.set_pump3_switch(var))
     elif switch_type == "pump4":
         cg.add(parent.set_pump4_switch(var))
+    elif switch_type == "blower":
+        cg.add(parent.set_blower_switch(var))
