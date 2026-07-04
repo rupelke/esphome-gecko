@@ -911,8 +911,7 @@ void GeckoSpaSwitch::write_state(bool state) {
     parent_->send_pump3_command(state ? 1 : 0);  // EXPERIMENTAL
   } else if (switch_type_ == "pump4") {
     parent_->send_pump4_command(state ? 1 : 0);  // EXPERIMENTAL
-  }
-      } else if (switch_type_ == "blower") {
+  } else if (switch_type_ == "blower") {
     parent_->send_blower_command(state);
   // State will be published when spa confirms the change
 }
