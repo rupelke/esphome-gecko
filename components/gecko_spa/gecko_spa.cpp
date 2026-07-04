@@ -98,10 +98,10 @@ void GeckoSpa::send_blower_command(bool on) {
   uint8_t cmd[20] = {
       0x17, 0x0A, 0x00, 0x00, 0x00, 0x17, 0x09, 0x00,
       0x00, 0x00, 0x00, 0x00, 0x06, 0x46, config_version_, status_version_,
-      0x01, 0x04, (uint8_t)(on ? 0x01 : 0x00), 0x00};
+      0x01, 0x02, (uint8_t)(on ? 0x02 : 0x00), 0x00};
   cmd[19] = calc_checksum(cmd, 20);
   send_i2c_message(cmd, 20);
-  ESP_LOGI(TAG, "Sent blower %s command (ID=0x04)", on ? "ON" : "OFF");
+  ESP_LOGI(TAG, "Sent blower %s command (ID=0x02, val=0x%02X)", on ? "ON" : "OFF", on ? 0x02 : 0x00);
 }
 
 void GeckoSpa::send_pump1_command(uint8_t state) {
