@@ -93,14 +93,15 @@ void GeckoSpa::send_circ_command(bool on) {
   send_i2c_message(cmd, 20);
   ESP_LOGI(TAG, "Sent circ %s command", on ? "ON" : "OFF");
 }
+
 void GeckoSpa::send_blower_command(bool on) {
   uint8_t cmd[20] = {
       0x17, 0x0A, 0x00, 0x00, 0x00, 0x17, 0x09, 0x00,
       0x00, 0x00, 0x00, 0x00, 0x06, 0x46, config_version_, status_version_,
-      0x01, 0x6A, (uint8_t)(on ? 0x01 : 0x00), 0x00};
+      0x01, 0x04, (uint8_t)(on ? 0x01 : 0x00), 0x00};
   cmd[19] = calc_checksum(cmd, 20);
   send_i2c_message(cmd, 20);
-  ESP_LOGI(TAG, "Sent blower %s command (ID=0x6A)", on ? "ON" : "OFF");
+  ESP_LOGI(TAG, "Sent blower %s command (ID=0x04)", on ? "ON" : "OFF");
 }
 
 void GeckoSpa::send_pump1_command(uint8_t state) {
@@ -158,7 +159,6 @@ void GeckoSpa::send_pump4_command(uint8_t state) {
   send_i2c_message(cmd, 20);
   ESP_LOGI(TAG, "Sent P4 state=%d command (val=0x%02X) [EXPERIMENTAL]", state, state_val);
 }
-
 
 void GeckoSpa::send_program_command(uint8_t prog) {
   if (prog > 4)
