@@ -914,7 +914,8 @@ void GeckoSpaSwitch::write_state(bool state) {
   } else if (switch_type_ == "blower") {
     parent_->send_blower_command(state);
   // State will be published when spa confirms the change
-}
+    }
+  }
 
 // GeckoSpaSelect implementation
 void GeckoSpaSelect::setup() {
