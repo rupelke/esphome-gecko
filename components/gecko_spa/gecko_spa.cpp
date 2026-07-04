@@ -75,16 +75,17 @@ void GeckoSpa::loop() {
 }
 
 void GeckoSpa::send_light_command(bool on) {
-  // Voor systemen met kleurcycli werkt een 'toggle' (0x02) vaak beter dan 'on' (0x01)
-  uint8_t action = 0x02; 
-  uint8_t cmd[20] = {
+  // Voor kleurcycli gebruiken we vaak een 'Toggle' (0x02) in plaats van 0x01
+  // We gebruiken hier de bewezen RQ (52 51) header structuur
+  uint8_t cmd[21] = {
       0x17, 0x0A, 0x00, 0x00, 0x00, 0x17, 0x09, 0x00,
-      0x00, 0x00, 0x00, 0x00, 0x06, 0x46, config_version_, status_version_,
-      0x01, 0x33, action, 0x00};
+      0x00, 0x00, 0x00, 0x00, 0x06, 0x46, 0x52, 0x51,
+      0x00, 0x33, 0x02, 0x00, 0x00}; // 0x02 is de 'Next/Toggle' actie
+      
+  cmd[20] = calc_checksum(cmd, 21);
+  send_i2c_message(cmd, 21);
   
-  cmd[19] = calc_checksum(cmd, 20);
-  send_i2c_message(cmd, 20);
-  ESP_LOGI(TAG, "Sent light toggle command (Cycle mode)");
+  ESP_LOGI(TAG, "DEBUG: Sent LIGHT Toggle command (RQ header)");
 }
 
 void GeckoSpa::send_circ_command(bool on) {
