@@ -82,6 +82,8 @@ class GeckoSpa : public Component, public uart::UARTDevice {
   void set_pump2_switch(switch_::Switch *sw) { pump2_switch_ = sw; }
   void set_pump3_switch(switch_::Switch *sw) { pump3_switch_ = sw; }
   void set_pump4_switch(switch_::Switch *sw) { pump4_switch_ = sw; }
+  void set_blower_switch(switch_::Switch *sw) { blower_switch_ = sw; }
+
   // Entity setters - binary sensors (read-only status)
   void set_waterfall_sensor(binary_sensor::BinarySensor *bs) { waterfall_sensor_ = bs; }
   void set_blower_sensor(binary_sensor::BinarySensor *bs) { blower_sensor_ = bs; }
@@ -142,6 +144,8 @@ void send_blower_command(bool on);
   switch_::Switch *pump2_switch_{nullptr};
   switch_::Switch *pump3_switch_{nullptr};
   switch_::Switch *pump4_switch_{nullptr};
+  switch_::Switch *blower_switch_{nullptr};
+
   // Entity pointers - binary sensors (read-only)
   binary_sensor::BinarySensor *waterfall_sensor_{nullptr};
   binary_sensor::BinarySensor *blower_sensor_{nullptr};
