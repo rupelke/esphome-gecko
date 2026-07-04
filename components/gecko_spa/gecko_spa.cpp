@@ -683,11 +683,13 @@ void GeckoSpa::parse_status_message(const uint8_t *data) {
       waterfall_sensor_->publish_state(waterfall_state_);
   }
 
-  if (first || new_blower != blower_state_) {
+ if (first || new_blower != blower_state_) {
     blower_state_ = new_blower;
     ESP_LOGI(TAG, "Blower: %s", blower_state_ ? "ON" : "OFF");
     if (blower_sensor_)
       blower_sensor_->publish_state(blower_state_);
+    if (blower_switch_)
+      blower_switch_->publish_state(blower_state_);
   }
 
   if (first || new_heating != heating_state_) {
