@@ -75,9 +75,8 @@ void GeckoSpa::loop() {
 }
 
 void GeckoSpa::send_light_command(bool on) {
-  uint8_t action = on ? 0x01 : 0x00;
-  // Sommige Gecko-systemen gebruiken 0x01 voor ON, andere vereisen een toggle (0x02)
-  // Als 0x01 niet werkt, probeer hieronder de actie aan te passen naar 0x02
+  // Voor systemen met kleurcycli werkt een 'toggle' (0x02) vaak beter dan 'on' (0x01)
+  uint8_t action = 0x02; 
   uint8_t cmd[20] = {
       0x17, 0x0A, 0x00, 0x00, 0x00, 0x17, 0x09, 0x00,
       0x00, 0x00, 0x00, 0x00, 0x06, 0x46, config_version_, status_version_,
@@ -85,9 +84,7 @@ void GeckoSpa::send_light_command(bool on) {
   
   cmd[19] = calc_checksum(cmd, 20);
   send_i2c_message(cmd, 20);
-  
-  // Loggen om in Home Assistant te zien wat er echt gestuurd is
-  ESP_LOGI(TAG, "DEBUG: Sent light command: Action byte is 0x%02X", action);
+  ESP_LOGI(TAG, "Sent light toggle command (Cycle mode)");
 }
 
 void GeckoSpa::send_circ_command(bool on) {
@@ -179,14 +176,9 @@ void GeckoSpa::send_program_command(uint8_t prog) {
 }
 
 void GeckoSpa::send_temperature_command(float temp_c) {
-  // Verruim de veiligheidsmarges om uitsluiting te voorkomen
-  // Sommige Gecko-systemen accepteren pas commando's vanaf 20 graden
-  if (temp_c < 15.0 || temp_c > 42.0) {
-    ESP_LOGW(TAG, "Temperature %.1f is outside safe range (15-42). Ignoring.", temp_c);
-    return;
-  }
+  // Forceer de waarde naar een Gecko-vriendelijk formaat (x2)
+  uint16_t temp_val = (uint16_t)(temp_c * 2.0);
   
-  uint16_t temp_val = (uint16_t)(temp_c * 2.0); // Gecko gebruikt vaak halve graden in hex
   uint8_t cmd[20] = {
       0x17, 0x0A, 0x00, 0x00, 0x00, 0x17, 0x09, 0x00,
       0x00, 0x00, 0x00, 0x00, 0x06, 0x46, config_version_, status_version_,
@@ -194,7 +186,7 @@ void GeckoSpa::send_temperature_command(float temp_c) {
       
   cmd[19] = calc_checksum(cmd, 20);
   send_i2c_message(cmd, 20);
-  ESP_LOGI(TAG, "Sent target temperature: %.1f°C (Hex: %02X)", temp_c, (uint8_t)(temp_val & 0xFF));
+  ESP_LOGI(TAG, "DEBUG: Forced temp command to: %.1f", temp_c);
 }
 
 void GeckoSpa::request_status() {
