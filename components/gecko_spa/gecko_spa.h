@@ -111,6 +111,8 @@ class GeckoSpa : public Component, public uart::UARTDevice {
   // Command methods
   void send_light_command(bool on);
   void send_circ_command(bool on);
+void send_blower_command(bool on);
+
   void send_pump1_command(uint8_t state);  // state: 0=OFF, 1=HIGH, 2=LOW
   void send_pump2_command(uint8_t state);  // Experimental: func ID 0x04
   void send_pump3_command(uint8_t state);  // Experimental: func ID 0x05
