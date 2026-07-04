@@ -176,19 +176,20 @@ void GeckoSpa::send_program_command(uint8_t prog) {
 }
 
 void GeckoSpa::send_temperature_command(float temp_c) {
-  // Verwijder de strikte if-check om te testen of de spa het commando wel accepteert
-  // Gecko-systemen gebruiken vaak een 'unsigned short' voor de temperatuur (temp * 2)
-  uint16_t temp_val = (uint16_t)(temp_c * 2.0);
+  // Berekening volgens jouw specificatie: (temp * 18) - 512
+  // We gebruiken int16_t voor de berekening
+  int16_t temp_raw = (int16_t)((temp_c * 18.0) - 512.0);
   
-  uint8_t cmd[20] = {
+  // Commando opbouw met de RQ marker (0x52 0x51) zoals door jou aangeleverd
+  uint8_t cmd[21] = {
       0x17, 0x0A, 0x00, 0x00, 0x00, 0x17, 0x09, 0x00,
-      0x00, 0x00, 0x00, 0x00, 0x06, 0x46, config_version_, status_version_,
-      0x01, 0x20, (uint8_t)(temp_val >> 8), (uint8_t)(temp_val & 0xFF)};
+      0x00, 0x00, 0x00, 0x00, 0x07, 0x46, 0x52, 0x51, 
+      0x00, 0x01, 0x02, (uint8_t)(temp_raw & 0xFF), 0x00};
       
-  cmd[19] = calc_checksum(cmd, 20);
-  send_i2c_message(cmd, 20);
+  cmd[20] = calc_checksum(cmd, 21);
+  send_i2c_message(cmd, 21);
   
-  ESP_LOGI(TAG, "DEBUG: Sent temperature command: %.1f°C (Raw: %04X)", temp_c, temp_val);
+  ESP_LOGI(TAG, "DEBUG: Sent TEMP: %.1f°C (Raw hex: %02X)", temp_c, (uint8_t)(temp_raw & 0xFF));
 }
 
 void GeckoSpa::request_status() {
