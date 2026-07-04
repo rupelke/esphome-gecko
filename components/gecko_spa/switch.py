@@ -18,6 +18,7 @@ SWITCH_TYPES = {
     "pump2": "pump2",
     "pump3": "pump3",
     "pump4": "pump4",
+    "blower": "blower",
 }
 
 CONFIG_SCHEMA = switch.switch_schema(GeckoSpaSwitch).extend(
