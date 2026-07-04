@@ -176,7 +176,8 @@ void GeckoSpa::send_program_command(uint8_t prog) {
 }
 
 void GeckoSpa::send_temperature_command(float temp_c) {
-  // Forceer de waarde naar een Gecko-vriendelijk formaat (x2)
+  // Verwijder de strikte if-check om te testen of de spa het commando wel accepteert
+  // Gecko-systemen gebruiken vaak een 'unsigned short' voor de temperatuur (temp * 2)
   uint16_t temp_val = (uint16_t)(temp_c * 2.0);
   
   uint8_t cmd[20] = {
@@ -186,7 +187,8 @@ void GeckoSpa::send_temperature_command(float temp_c) {
       
   cmd[19] = calc_checksum(cmd, 20);
   send_i2c_message(cmd, 20);
-  ESP_LOGI(TAG, "DEBUG: Forced temp command to: %.1f", temp_c);
+  
+  ESP_LOGI(TAG, "DEBUG: Sent temperature command: %.1f°C (Raw: %04X)", temp_c, temp_val);
 }
 
 void GeckoSpa::request_status() {
