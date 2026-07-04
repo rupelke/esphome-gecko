@@ -94,7 +94,7 @@ void GeckoSpa::send_circ_command(bool on) {
   ESP_LOGI(TAG, "Sent circ %s command", on ? "ON" : "OFF");
 }
 void GeckoSpa::send_blower_command(bool on) {
-  uint8_t state_val = (user_demand_state_ & 0xEF) | ((on) ? 0x10 : 0x00);
+  uint8_t state_val = (user_demand_state_ & 0xBF) | ((on) ? 0x40 : 0x00);
   uint8_t cmd[20] = {
       0x17, 0x0A, 0x00, 0x00, 0x00, 0x17, 0x09, 0x00,
       0x00, 0x00, 0x00, 0x00, 0x06, 0x46, config_version_, status_version_,
